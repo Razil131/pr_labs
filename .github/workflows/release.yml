@@ -25,7 +25,7 @@ jobs:
 
       - name: Set Linux asset path
         id: package
-        run: echo "asset_path=build/helloworld-0.0.${{ github.run_number }}-Linux.deb >> $GITHUB_OUTPUT
+        run: echo "asset_path=build/helloworld-0.0.${{ github.run_number }}-Linux.deb" >> $GITHUB_OUTPUT
     outputs:
       linux_asset: ${{ steps.package.outputs.asset_path }}
 
