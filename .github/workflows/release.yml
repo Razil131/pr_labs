@@ -23,11 +23,11 @@ jobs:
       - name: Debug
         run: ls -R build
 
-      - name: Set Linux asset path
-        id: package
-        run: echo "asset_path=${{ github.workspace }}/build/helloworld-0.0.${{ github.run_number }}-Linux.deb" >> $GITHUB_OUTPUT
-    outputs:
-      linux_asset: ${{ steps.package.outputs.asset_path }}
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-deb
+          path: build/helloworld-0.0.${{ github.run_number }}-Linux.deb
 
   build_windows:
     runs-on: windows-latest
@@ -69,17 +69,26 @@ jobs:
           cd build
           zip -r ../helloworld-0.0.${{ github.run_number }}-Windows.zip *
 
-      - name: Set Windows asset path
-        id: package
-        run: echo "asset_path=${{ github.workspace }}/helloworld-0.0.${{ github.run_number }}-Windows.zip" >> $GITHUB_OUTPUT
-    outputs:
-      windows_asset: ${{ steps.package.outputs.asset_path }}
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-zip
+          path: helloworld-0.0.${{ github.run_number }}-Windows.zip
 
   release:
     runs-on: ubuntu-latest
     needs: [build_linux, build_windows]
-    permissions: write-all
     steps:
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: linux-deb
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: windows-zip
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -88,8 +97,6 @@ jobs:
         with:
           tag_name: ${{ github.run_number }}
           release_name: Release 0.0.${{ github.run_number }}
-          draft: false
-          prerelease: false
 
       - name: Upload Linux asset
         uses: actions/upload-release-asset@v1
@@ -97,7 +104,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ needs.build_linux.outputs.linux_asset }}
+          asset_path: helloworld-0.0.${{ github.run_number }}-Linux.deb
           asset_name: helloworld-0.0.${{ github.run_number }}-Linux.deb
           asset_content_type: application/vnd.debian.binary-package
 
@@ -107,6 +114,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ needs.build_windows.outputs.windows_asset }}
+          asset_path: helloworld-0.0.${{ github.run_number }}-Windows.zip
           asset_name: helloworld-0.0.${{ github.run_number }}-Windows.zip
           asset_content_type: application/zip
