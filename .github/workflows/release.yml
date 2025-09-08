@@ -21,7 +21,7 @@ jobs:
       - run: cmake --build build --target package
 
       - name: Upload Linux artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-deb
           path: build/helloworld-0.0.${{ github.run_number }}-Linux.deb
@@ -67,7 +67,7 @@ jobs:
           zip -r ../helloworld-0.0.${{ github.run_number }}-Windows.zip *
 
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-zip
           path: helloworld-0.0.${{ github.run_number }}-Windows.zip
@@ -78,13 +78,13 @@ jobs:
     permissions: write-all
     steps:
       - name: Download Linux artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: linux-deb
           path: ./release_files
 
       - name: Download Windows artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: windows-zip
           path: ./release_files
