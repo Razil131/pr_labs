@@ -18,7 +18,7 @@ jobs:
 
       - name: Set Linux asset path
         id: package
-        run: echo "asset_path=./build/helloworld-0.0.${{ github.run_number }}-Linux.deb" >> $GITHUB_OUTPUT
+        run: echo "asset_path=$(find build/_CPack_Packages/Linux/DEB -name '*.deb')" >> $GITHUB_OUTPUT
 
       - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
       - run: cmake . -DPATCH_VERSION=${{ github.run_number }}
