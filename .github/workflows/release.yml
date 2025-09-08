@@ -8,8 +8,6 @@ on:
 jobs:
   build_linux:
     runs-on: ubuntu-latest
-    outputs:
-      linux_asset: ${{ steps.package.outputs.asset_path }}
     permissions: write-all
     steps:
       - uses: actions/checkout@v3
@@ -25,12 +23,12 @@ jobs:
       - name: Set Linux asset path
         id: package
         run: echo "asset_path=$(find build/_CPack_Packages/Linux/DEB -name '*.deb')" >> $GITHUB_OUTPUT
+    outputs:
+      linux_asset: ${{ steps.package.outputs.asset_path }}
 
   build_windows:
     runs-on: windows-latest
     permissions: write-all
-    outputs:
-      windows_asset: ${{ steps.package.outputs.asset_path }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -71,6 +69,8 @@ jobs:
       - name: Set Windows asset path
         id: package
         run: echo "asset_path=./helloworld-0.0.${{ github.run_number }}-Windows.zip" >> $GITHUB_OUTPUT
+    outputs:
+      windows_asset: ${{ steps.package.outputs.asset_path }}
 
   release:
     runs-on: ubuntu-latest
