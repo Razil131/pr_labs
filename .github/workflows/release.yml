@@ -37,8 +37,10 @@ jobs:
           update: true
           install: >
             base-devel
+            mingw-w64-x86_64-make
             mingw-w64-x86_64-boost
             mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-toolchain
 
       - name: Configure and Build
         shell: msys2 {0}
@@ -53,6 +55,9 @@ jobs:
           MSYSTEM: MINGW64
 
       - name: Zip Windows build
+        shell: msys2 {0}
+        env:
+          MSYSTEM: MINGW64
         run: powershell Compress-Archive -Path build/* -DestinationPath helloworld-0.0.${{ github.run_number }}-Windows.zip
 
       - name: Set Windows asset path
