@@ -38,13 +38,16 @@ jobs:
           install: mingw-w64-x86_64-boost
 
       - run: cmake -G "MinGW Makefiles" -S . -B build \
-          -DCMAKE_PREFIX_PATH=C:/msys64/mingw64 \
-          -DBoost_INCLUDE_DIR=C:/msys64/mingw64/include \
-          -DBoost_LIBRARY_DIR=C:/msys64/mingw64/lib \
-          -DBoost_USE_STATIC_LIBS=ON \
-          -DBoost_USE_MULTITHREADED=ON \
-          -DBoost_USE_STATIC_RUNTIME=OFF \
-          -DPATCH_VERSION=${{ github.run_number }}
+            -DCMAKE_C_COMPILER=/mingw64/bin/gcc \
+            -DCMAKE_CXX_COMPILER=/mingw64/bin/g++ \
+            -DCMAKE_PREFIX_PATH=/mingw64 \
+            -DBoost_INCLUDE_DIR=/mingw64/include \
+            -DBoost_LIBRARY_DIR=/mingw64/lib \
+            -DBoost_USE_STATIC_LIBS=ON \
+            -DBoost_USE_MULTITHREADED=ON \
+            -DBoost_USE_STATIC_RUNTIME=OFF \
+            -DPATCH_VERSION=${{ github.run_number }}
+
 
       - run: cmake --build build
       - run: cmake --build build --target test
