@@ -1,8 +1,0 @@
-[
-{
-  "directory": "C:/Users/юсер/Desktop/lab2/build",
-  "command": "C:\\msys64\\mingw64\\bin\\c++.exe -g -o CMakeFiles\\lab2.dir\\main.cpp.obj -c C:\\Users\\юсер\\Desktop\\lab2\\main.cpp",
-  "file": "C:\\Users\\юсер\\Desktop\\lab2\\main.cpp",
-  "output": "CMakeFiles\\lab2.dir\\main.cpp.obj"
-}
-]
