@@ -17,7 +17,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
       - run: cmake -S . -B build -DPATCH_VERSION=${{ github.run_number }}
       - run: cmake --build build
-      - run: cmake --build build --target test
+      - run: cmake --build build --target testing
       - run: cmake --build build --target package
 
       - name: Upload Linux artifact
@@ -53,7 +53,7 @@ jobs:
           cd build
           cmake -G "MinGW Makefiles" .. -DPATCH_VERSION=${{ github.run_number }}
           cmake --build .
-          cmake --build . --target test
+          cmake --build . --target testing
           cmake --build . --target package
         env:
           MSYSTEM: MINGW64
