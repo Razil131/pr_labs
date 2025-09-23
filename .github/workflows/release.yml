@@ -18,7 +18,7 @@ jobs:
       - run: cmake -S . -B build -DPATCH_VERSION=${{ github.run_number }}
       - run: cmake --build build
       - run: cmake --build build --target testing
-      - run: cmake --build build --target package
+      - run: cmake --build build --target main
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
@@ -54,7 +54,7 @@ jobs:
           cmake -G "MinGW Makefiles" .. -DPATCH_VERSION=${{ github.run_number }}
           cmake --build .
           cmake --build . --target testing
-          cmake --build . --target package
+          cmake --build . --target main
         env:
           MSYSTEM: MINGW64
 
