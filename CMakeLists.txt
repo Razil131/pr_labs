@@ -3,13 +3,13 @@ project(lab2 VERSION 0.1.0 LANGUAGES CXX)
 
 find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 
-add_executable(main main.cpp)
+add_executable(main main.cpp ip_filter.cpp)
 set_target_properties(main PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
 )
 
-add_executable(testing test.cpp)
+add_executable(testing ip_filter.cpp test.cpp)
 set_target_properties(testing PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
@@ -27,11 +27,5 @@ else()
     target_compile_options(testing PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
 
-install(TARGETS main RUNTIME DESTINATION bin)
-
-set(CPACK_GENERATOR DEB)
-set(CPACK_PACKAGE_CONTACT example@example.com)
-include(CPack)
-
 enable_testing()
-add_test(NAME testing COMMAND test)
+add_test(NAME testing COMMAND testing)
