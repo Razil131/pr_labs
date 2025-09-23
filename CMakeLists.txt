@@ -27,5 +27,15 @@ else()
     target_compile_options(testing PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
 
+install(TARGETS main RUNTIME DESTINATION bin)
+
+set(CPACK_GENERATOR DEB)
+
+
+set(CPACK_PACKAGE_CONTACT example@example.com)
+
+
+include(CPack)
+
 enable_testing()
 add_test(NAME testing COMMAND testing)
