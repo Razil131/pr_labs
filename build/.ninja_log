@@ -1,0 +1,10 @@
+# ninja log v6
+43	1129	7818036715193799	CMakeFiles/lab3.dir/source/duo_list.cpp.obj	ab60d88d71c0e999
+53	1356	7818036463926392	CMakeFiles/lab3.dir/source/mvector.cpp.obj	4a9ed35e3e4970be
+39	869	7818021654969506	CMakeFiles/lab3.dir/single_list.cpp.obj	a2320a8ad0f9fdd8
+125	1711	7818021344806154	CMakeFiles/lab3.dir/duo_list.cpp.obj	109ef8b281258895
+58	1349	7818036463976416	CMakeFiles/lab3.dir/source/single_list.cpp.obj	e17a44eb1e4fc629
+1094	1251	7818042370341627	lab3.exe	60189776d9d79d0b
+110	1716	7818021344656131	CMakeFiles/lab3.dir/mvector.cpp.obj	7d369a9b4e4bc378
+51	1093	7818042359912439	CMakeFiles/lab3.dir/main.cpp.obj	261ffd1bf0681f5a
+67	719	7818043571272556	build.ninja	35689453fa22ed4a

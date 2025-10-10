@@ -1,0 +1,26 @@
+[
+{
+  "directory": "C:/labs/pr_labs/lab3/build",
+  "command": "C:\\msys64\\mingw64\\bin\\c++.exe -IC:/labs/pr_labs/lab3/include -g -o CMakeFiles\\lab3.dir\\main.cpp.obj -c C:\\labs\\pr_labs\\lab3\\main.cpp",
+  "file": "C:\\labs\\pr_labs\\lab3\\main.cpp",
+  "output": "CMakeFiles\\lab3.dir\\main.cpp.obj"
+},
+{
+  "directory": "C:/labs/pr_labs/lab3/build",
+  "command": "C:\\msys64\\mingw64\\bin\\c++.exe -IC:/labs/pr_labs/lab3/include -g -o CMakeFiles\\lab3.dir\\source\\mvector.cpp.obj -c C:\\labs\\pr_labs\\lab3\\source\\mvector.cpp",
+  "file": "C:\\labs\\pr_labs\\lab3\\source\\mvector.cpp",
+  "output": "CMakeFiles\\lab3.dir\\source\\mvector.cpp.obj"
+},
+{
+  "directory": "C:/labs/pr_labs/lab3/build",
+  "command": "C:\\msys64\\mingw64\\bin\\c++.exe -IC:/labs/pr_labs/lab3/include -g -o CMakeFiles\\lab3.dir\\source\\single_list.cpp.obj -c C:\\labs\\pr_labs\\lab3\\source\\single_list.cpp",
+  "file": "C:\\labs\\pr_labs\\lab3\\source\\single_list.cpp",
+  "output": "CMakeFiles\\lab3.dir\\source\\single_list.cpp.obj"
+},
+{
+  "directory": "C:/labs/pr_labs/lab3/build",
+  "command": "C:\\msys64\\mingw64\\bin\\c++.exe -IC:/labs/pr_labs/lab3/include -g -o CMakeFiles\\lab3.dir\\source\\duo_list.cpp.obj -c C:\\labs\\pr_labs\\lab3\\source\\duo_list.cpp",
+  "file": "C:\\labs\\pr_labs\\lab3\\source\\duo_list.cpp",
+  "output": "CMakeFiles\\lab3.dir\\source\\duo_list.cpp.obj"
+}
+]
