@@ -1,14 +1,11 @@
 #include "../include/mvector.hpp"
 #include <iostream>
 
-mVector::mVector(int capacity)
-{
-    arr = new int[capacity];
-    this->arr_size = 0;
-    this->capacity = capacity;
-}
+mVector::mVector(int capacity) : arr(std::make_unique<int[]>(capacity)),
+                                 arr_size(0),
+                                 capacity(capacity) {}
 
-mVector::mVector(mVector &&other) noexcept : arr(other.arr),
+mVector::mVector(mVector &&other) noexcept : arr(std::move(other.arr)),
                                              arr_size(other.arr_size),
                                              capacity(other.capacity)
 {
@@ -21,8 +18,7 @@ mVector &mVector::operator=(mVector &&other) noexcept
 {
     if (this != &other)
     {
-        delete[] arr;
-        arr = other.arr;
+        arr = std::move(other.arr);
         arr_size = other.arr_size;
         capacity = other.capacity;
         other.arr = nullptr;
@@ -32,10 +28,7 @@ mVector &mVector::operator=(mVector &&other) noexcept
     return *this;
 }
 
-mVector::~mVector()
-{
-    delete[] arr;
-}
+mVector::~mVector() {}
 
 void mVector::push_back(int val)
 {
@@ -46,14 +39,13 @@ void mVector::push_back(int val)
     }
     else
     {
-        int *new_arr = new int[capacity * 2];
+        auto new_arr = std::make_unique<int[]>(capacity * 2);
         for (int i = 0; i < arr_size; i++)
         {
             new_arr[i] = arr[i];
         }
         new_arr[arr_size] = val;
-        delete[] arr;
-        arr = new_arr;
+        arr = std::move(new_arr);
         capacity *= 2;
         arr_size++;
     }
@@ -74,7 +66,7 @@ void mVector::insert(int index, int val)
     }
     else
     {
-        int *new_arr = new int[capacity * 2];
+        auto new_arr = std::make_unique<int[]>(capacity * 2);
         for (int i = 0; i < index; i++)
         {
             new_arr[i] = arr[i];
@@ -84,8 +76,7 @@ void mVector::insert(int index, int val)
         {
             new_arr[i + 1] = arr[i];
         }
-        delete[] arr;
-        arr = new_arr;
+        arr = std::move(new_arr);
         capacity *= 2;
         arr_size++;
     }
@@ -125,9 +116,9 @@ void mVector::print() const
     std::cout << std::endl;
 }
 
-mVectorIterator mVector::begin() { return mVectorIterator(arr); }
+mVectorIterator mVector::begin() { return mVectorIterator(arr.get()); }
 
-mVectorIterator mVector::end() { return mVectorIterator(arr + arr_size); }
+mVectorIterator mVector::end() { return mVectorIterator(arr.get() + arr_size); }
 
 mVectorIterator::mVectorIterator(int *ptr) : ptr(ptr) {}
 

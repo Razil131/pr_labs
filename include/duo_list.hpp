@@ -1,10 +1,11 @@
 #pragma once
+#include <memory>
 
 class DuoNode
 {
 public:
     int value;
-    DuoNode *next;
+    std::unique_ptr<DuoNode> next;
     DuoNode *prev;
 
     DuoNode(int val);
@@ -26,7 +27,7 @@ public:
 class DuoList
 {
 private:
-    DuoNode *head;
+    std::unique_ptr<DuoNode> head;
     int listSize;
 
 public:

@@ -5,7 +5,7 @@ SingleNode::SingleNode(int val) : value(val), next(nullptr) {}
 
 SingleList::SingleList() : head(nullptr), listSize(0) {}
 
-SingleList::SingleList(SingleList &&other) noexcept : head(other.head),
+SingleList::SingleList(SingleList &&other) noexcept : head(std::move(other.head)),
                                                       listSize(other.listSize)
 {
     other.head = nullptr;
@@ -16,14 +16,7 @@ SingleList &SingleList::operator=(SingleList &&other) noexcept
 {
     if (this != &other)
     {
-        SingleNode *current = head;
-        while (current != nullptr)
-        {
-            SingleNode *cur_next = current->next;
-            delete current;
-            current = cur_next;
-        }
-        head = other.head;
+        head = std::move(other.head);
         listSize = other.listSize;
         other.head = nullptr;
         other.listSize = 0;
@@ -33,31 +26,24 @@ SingleList &SingleList::operator=(SingleList &&other) noexcept
 
 SingleList::~SingleList()
 {
-    SingleNode *current = head;
-    while (current != nullptr)
-    {
-        SingleNode *next = current->next;
-        delete current;
-        current = next;
-    }
 }
 
 void SingleList::push_back(int val)
 {
-    SingleNode *newSingleNode = new SingleNode(val);
+    auto newSingleNode = std::make_unique<SingleNode>(val);
 
     if (head == nullptr)
     {
-        head = newSingleNode;
+        head = std::move(newSingleNode);
     }
     else
     {
-        SingleNode *current = head;
+        SingleNode *current = head.get();
         while (current->next != nullptr)
         {
-            current = current->next;
+            current = current->next.get();
         }
-        current->next = newSingleNode;
+        current->next = std::move(newSingleNode);
     }
 
     listSize++;
@@ -68,21 +54,21 @@ void SingleList::insert(int index, int val)
     if (index < 0 || index > listSize)
         throw std::out_of_range("Index out of range");
 
-    SingleNode *newSingleNode = new SingleNode(val);
+    auto newSingleNode = std::make_unique<SingleNode>(val);
 
     if (index == 0)
     {
-        newSingleNode->next = head;
-        head = newSingleNode;
+        newSingleNode->next = std::move(head);
+        head = std::move(newSingleNode);
     }
     else
     {
-        SingleNode *current = head;
+        SingleNode *current = head.get();
         for (int i = 0; i < index - 1; ++i)
-            current = current->next;
+            current = current->next.get();
 
-        newSingleNode->next = current->next;
-        current->next = newSingleNode;
+        newSingleNode->next = std::move(current->next);
+        current->next = std::move(newSingleNode);
     }
 
     listSize++;
@@ -95,19 +81,16 @@ void SingleList::erase(int index)
 
     if (index == 0)
     {
-        SingleNode *to_delete = head;
-        head = head->next;
-        delete to_delete;
+        head = std::move(head->next);
     }
     else
     {
-        SingleNode *current = head;
+        SingleNode *current = head.get();
         for (int i = 0; i < index - 1; ++i)
-            current = current->next;
+            current = current->next.get();
 
-        SingleNode *to_delete = current->next;
-        current->next = to_delete->next;
-        delete to_delete;
+        std::unique_ptr<SingleNode> to_delete = std::move(current->next);
+        current->next = std::move(to_delete->next);
     }
 
     listSize--;
@@ -123,25 +106,25 @@ int &SingleList::operator[](int index)
     if (index < 0 || index >= listSize)
         throw std::out_of_range("Index out of range");
 
-    SingleNode *current = head;
+    SingleNode *current = head.get();
     for (int i = 0; i < index; ++i)
-        current = current->next;
+        current = current->next.get();
 
     return current->value;
 }
 
 void SingleList::print() const
 {
-    SingleNode *current = head;
+    SingleNode *current = head.get();
     while (current != nullptr)
     {
         std::cout << current->value << " ";
-        current = current->next;
+        current = current->next.get();
     }
     std::cout << std::endl;
 }
 
-SingleListIterator SingleList::begin() { return SingleListIterator(head); }
+SingleListIterator SingleList::begin() { return SingleListIterator(head.get()); }
 
 SingleListIterator SingleList::end() { return SingleListIterator(nullptr); }
 
@@ -151,7 +134,7 @@ int &SingleListIterator::operator*() { return current->value; }
 
 SingleListIterator &SingleListIterator::operator++()
 {
-    current = current->next;
+    current = current->next.get();
     return *this;
 }
 

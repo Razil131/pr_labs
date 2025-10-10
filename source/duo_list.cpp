@@ -5,7 +5,7 @@ DuoNode::DuoNode(int val) : value(val), next(nullptr), prev(nullptr) {}
 
 DuoList::DuoList() : head(nullptr), listSize(0) {}
 
-DuoList::DuoList(DuoList &&other) noexcept : head(other.head),
+DuoList::DuoList(DuoList &&other) noexcept : head(std::move(other.head)),
                                              listSize(other.listSize)
 {
     other.head = nullptr;
@@ -16,49 +16,32 @@ DuoList &DuoList::operator=(DuoList &&other) noexcept
 {
     if (this != &other)
     {
-        DuoNode *current = head;
-        while (current != nullptr)
-        {
-            DuoNode *cur_next = current->next;
-            delete current;
-            current = cur_next;
-        }
-        head = other.head;
+        head = std::move(other.head);
         listSize = other.listSize;
-        other.head = nullptr;
         other.listSize = 0;
     }
     return *this;
 }
 
-DuoList::~DuoList()
-{
-    DuoNode *current = head;
-    while (current != nullptr)
-    {
-        DuoNode *next = current->next;
-        delete current;
-        current = next;
-    }
-}
+DuoList::~DuoList() {}
 
 void DuoList::push_back(int val)
 {
-    DuoNode *newDuoNode = new DuoNode(val);
+    auto newDuoNode = std::make_unique<DuoNode>(val);
 
     if (head == nullptr)
     {
-        head = newDuoNode;
+        head = std::move(newDuoNode);
     }
     else
     {
-        DuoNode *current = head;
+        DuoNode *current = head.get();
         while (current->next != nullptr)
         {
-            current = current->next;
+            current = current->next.get();
         }
-        current->next = newDuoNode;
         newDuoNode->prev = current;
+        current->next = std::move(newDuoNode);
     }
 
     listSize++;
@@ -69,28 +52,30 @@ void DuoList::insert(int index, int val)
     if (index < 0 || index > listSize)
         throw std::out_of_range("Index out of range");
 
-    DuoNode *newNode = new DuoNode(val);
+    auto newNode = std::make_unique<DuoNode>(val);
 
     if (index == 0)
     {
-        newNode->next = head;
         if (head != nullptr)
-            head->prev = newNode;
-        head = newNode;
+        {
+            head->prev = newNode.get();
+            newNode->next = std::move(head);
+        }
+        head = std::move(newNode);
     }
     else
     {
-        DuoNode *current = head;
+        DuoNode *current = head.get();
         for (int i = 0; i < index - 1; ++i)
-            current = current->next;
+            current = current->next.get();
 
-        newNode->next = current->next;
+        newNode->next = std::move(current->next);
         newNode->prev = current;
 
         if (current->next != nullptr)
-            current->next->prev = newNode;
+            current->next->prev = newNode.get();
 
-        current->next = newNode;
+        current->next = std::move(newNode);
     }
 
     listSize++;
@@ -103,24 +88,20 @@ void DuoList::erase(int index)
 
     if (index == 0)
     {
-        DuoNode *to_delete = head;
-        head = head->next;
-        if (head != nullptr)
-            head->prev = nullptr;
-        delete to_delete;
+        if (head->next)
+            head->next->prev = nullptr;
+        head = std::move(head->next);
     }
     else
     {
-        DuoNode *current = head;
+        DuoNode *current = head.get();
         for (int i = 0; i < index - 1; ++i)
-            current = current->next;
+            current = current->next.get();
 
-        DuoNode *to_delete = current->next;
-        current->next = to_delete->next;
+        auto to_delete = std::move(current->next);
+        current->next = std::move(to_delete->next);
         if (to_delete->next != nullptr)
             to_delete->next->prev = current;
-
-        delete to_delete;
     }
 
     listSize--;
@@ -136,25 +117,25 @@ int &DuoList::operator[](int index)
     if (index < 0 || index >= listSize)
         throw std::out_of_range("Index out of range");
 
-    DuoNode *current = head;
+    DuoNode *current = head.get();
     for (int i = 0; i < index; ++i)
-        current = current->next;
+        current = current->next.get();
 
     return current->value;
 }
 
 void DuoList::print() const
 {
-    DuoNode *current = head;
+    DuoNode *current = head.get();
     while (current != nullptr)
     {
         std::cout << current->value << " ";
-        current = current->next;
+        current = current->next.get();
     }
     std::cout << std::endl;
 }
 
-DuoListIterator DuoList::begin() { return DuoListIterator(head); }
+DuoListIterator DuoList::begin() { return DuoListIterator(head.get()); }
 
 DuoListIterator DuoList::end() { return DuoListIterator(nullptr); }
 
@@ -164,7 +145,7 @@ int &DuoListIterator::operator*() { return current->value; }
 
 DuoListIterator &DuoListIterator::operator++()
 {
-    current = current->next;
+    current = current->next.get();
     return *this;
 }
 

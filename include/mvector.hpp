@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 class mVectorIterator
 {
     int *ptr;
@@ -16,7 +18,7 @@ public:
 class mVector
 {
 private:
-    int *arr;
+    std::unique_ptr<int[]> arr;
     int arr_size;
     int capacity;
 

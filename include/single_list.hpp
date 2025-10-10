@@ -1,10 +1,11 @@
 #pragma once
+#include <memory>
 
 class SingleNode
 {
 public:
     int value;
-    SingleNode *next;
+    std::unique_ptr<SingleNode> next;
 
     SingleNode(int val);
 };
@@ -24,7 +25,7 @@ public:
 class SingleList
 {
 private:
-    SingleNode *head;
+    std::unique_ptr<SingleNode> head;
     int listSize;
 
 public:
