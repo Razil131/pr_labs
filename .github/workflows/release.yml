@@ -75,7 +75,7 @@ jobs:
       - name: Download Linux artifact
         uses: actions/download-artifact@v4
         with:
-          name: linux-deb
+          name: linux-build
           path: ./release_files
 
       - name: Download Windows artifact
