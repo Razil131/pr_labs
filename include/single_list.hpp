@@ -1,31 +1,35 @@
 #pragma once
 #include <memory>
 
+template <typename T>
 class SingleNode
 {
 public:
-    int value;
+    T value;
     std::unique_ptr<SingleNode> next;
 
-    SingleNode(int val);
+    SingleNode(const T &val);
+    SingleNode(T &&val);
 };
 
+template <typename T>
 class SingleListIterator
 {
-    SingleNode *current;
+    SingleNode<T> *current;
 
 public:
-    SingleListIterator(SingleNode *node);
-    int &operator*();
+    SingleListIterator(SingleNode<T> *node);
+    T &operator*();
     SingleListIterator &operator++();
     bool operator!=(const SingleListIterator &other) const;
-    int &get();
+    T &get();
 };
 
+template <typename T>
 class SingleList
 {
 private:
-    std::unique_ptr<SingleNode> head;
+    std::unique_ptr<SingleNode<T>> head;
     int listSize;
 
 public:
@@ -37,19 +41,25 @@ public:
 
     ~SingleList();
 
-    void push_back(int val);
+    void push_back(T &val);
 
-    void insert(int index, int val);
+    void push_back(T &&val);
+
+    void insert(int index, T &val);
+
+    void insert(int index, T &&val);
 
     void erase(int index);
 
     int size() const;
 
-    int &operator[](int index);
+    T &operator[](int index);
 
     void print() const;
 
-    SingleListIterator begin();
+    SingleListIterator<T> begin();
 
-    SingleListIterator end();
+    SingleListIterator<T> end();
 };
+
+#include "../src/single_list.tpp"

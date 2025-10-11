@@ -5,7 +5,7 @@
 
 void vec_test()
 {
-    mVector *vec = new mVector(1);
+    mVector<int> *vec = new mVector<int>(1);
     for (int i = 0; i < 10; i++)
     {
         vec->push_back(i);
@@ -26,7 +26,7 @@ void vec_test()
 
 void sl_test()
 {
-    SingleList *vec = new SingleList();
+    SingleList<int> *vec = new SingleList<int>();
     for (int i = 0; i < 10; i++)
     {
         vec->push_back(i);
@@ -47,7 +47,7 @@ void sl_test()
 
 void dl_test()
 {
-    DuoList *vec = new DuoList();
+    DuoList<int> *vec = new DuoList<int>();
     for (int i = 0; i < 10; i++)
     {
         vec->push_back(i);

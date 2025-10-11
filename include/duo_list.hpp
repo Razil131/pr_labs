@@ -1,33 +1,37 @@
 #pragma once
 #include <memory>
 
+template <typename T>
 class DuoNode
 {
 public:
-    int value;
-    std::unique_ptr<DuoNode> next;
-    DuoNode *prev;
+    T value;
+    std::unique_ptr<DuoNode<T>> next;
+    DuoNode<T> *prev;
 
-    DuoNode(int val);
+    DuoNode(const T &val);
+    DuoNode(T &&val);
 };
 
+template <typename T>
 class DuoListIterator
 {
-    DuoNode *current;
+    DuoNode<T> *current;
 
 public:
-    DuoListIterator(DuoNode *node);
-    int &operator*();
-    DuoListIterator &operator++();
-    DuoListIterator &operator--();
+    DuoListIterator(DuoNode<T> *node);
+    T &operator*();
+    DuoListIterator<T> &operator++();
+    DuoListIterator<T> &operator--();
     bool operator!=(const DuoListIterator &other) const;
-    int &get();
+    T &get();
 };
 
+template <typename T>
 class DuoList
 {
 private:
-    std::unique_ptr<DuoNode> head;
+    std::unique_ptr<DuoNode<T>> head;
     int listSize;
 
 public:
@@ -37,19 +41,25 @@ public:
 
     ~DuoList();
 
-    void push_back(int val);
+    void push_back(const T &val);
 
-    void insert(int index, int val);
+    void push_back(T &&val);
+
+    void insert(int index, const T &val);
+
+    void insert(int index, T &&val);
 
     void erase(int index);
 
     int size() const;
 
-    int &operator[](int index);
+    T &operator[](int index);
 
     void print() const;
 
-    DuoListIterator begin();
+    DuoListIterator<T> begin();
 
-    DuoListIterator end();
+    DuoListIterator<T> end();
 };
+
+#include "../src/duo_list.tpp"

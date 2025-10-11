@@ -3,9 +3,12 @@ project(lab3 VERSION 0.1.0 LANGUAGES C CXX)
 
 set(SOURCE_FILE
     main.cpp
-    ./source/mvector.cpp
-    ./source/single_list.cpp
-    ./source/duo_list.cpp
+    ./src/single_list.tpp
+    ./src/duo_list.tpp
+    ./src/mvector.tpp
+    ./include/duo_list.hpp
+    ./include/mvector.hpp
+    ./include/single_list.hpp
     )
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
