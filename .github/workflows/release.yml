@@ -1,0 +1,93 @@
+name: 'C++ CI/CD Release'
+
+on:
+  push:
+    branches:
+      - lab5
+
+jobs:
+  build_linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git libx11-dev libfreetype6-dev libgl1-mesa-dev
+
+      - name: Configure and build
+        run: |
+          cmake -S . -B build -DPATCH_VERSION=${{ github.run_number }}
+          cmake --build build --config Release
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: build/
+
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >
+            base-devel
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-sfml
+            zip
+
+      - name: Configure and build
+        shell: msys2 {0}
+        run: |
+          mkdir -p build
+          cd build
+          cmake -G "MinGW Makefiles" .. -DPATCH_VERSION=${{ github.run_number }}
+          cmake --build .
+
+      - name: Zip Windows build
+        shell: msys2 {0}
+        run: |
+          cd build
+          zip -r ../physics-Windows-${{ github.run_number }}.zip *
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-zip
+          path: build/../physics-Windows-${{ github.run_number }}.zip
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build_linux, build_windows]
+    steps:
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-build
+          path: ./release_files/linux
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-zip
+          path: ./release_files/windows
+
+      - name: Create GitHub Release & upload assets
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          files: ./release_files/**/* 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
